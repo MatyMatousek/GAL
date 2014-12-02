@@ -11,6 +11,7 @@ Edge::Edge(Node *sourceNode, Node *destinationNode, QGraphicsItem *parent)
     source = sourceNode;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     color = Qt::black;
+    setZValue(-1000.0);
     setPen(QPen(color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
 

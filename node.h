@@ -1,12 +1,12 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <QGraphicsItem>
+#include <QGraphicsPixmapItem>
 #include <QList>
 
 class Edge;
 
-class Node : public QGraphicsItem
+class Node : public QGraphicsEllipseItem
 {
 public:
     enum { Type = UserType + 15 };
@@ -14,22 +14,16 @@ public:
 
     void removeEdge(Edge *edge);
     void removeEdges();
-    QPolygonF polygon() const { return myPolygon; }
+    QRectF polygon() const { return rectangle; }
     void addEdge(Edge *edge);
     QPixmap image() const;
     int type() const { return Type;}
 
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-
 protected:
-    //void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    QPolygonF myPolygon;
-    QMenu *myContextMenu;
+    QRectF rectangle;
     QList<Edge *> edges;
 };
 

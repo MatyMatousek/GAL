@@ -62,7 +62,7 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             //edge->setColor(myLineColor);
             startItem->addEdge(edge);
             endItem->addEdge(edge);
-            //edge->setZValue(-1000.0);
+            edge->setZValue(-1000.0);
             addItem(edge);
             edge->updatePosition();
         }

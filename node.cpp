@@ -7,8 +7,12 @@
 #include <QPainter>
 
 Node::Node(QGraphicsItem *parent)
-    : QGraphicsItem(parent)
+    : QGraphicsEllipseItem(parent)
 {
+    setZValue(10);
+    rectangle.setRect(-25.0, -25.0, 50.0, 50.0);
+
+    setRect(rectangle);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -43,11 +47,11 @@ void Node::addEdge(Edge *edge)
 //! [3]
 
 //! [4]
-QRectF Node::boundingRect() const
+/*QRectF Node::boundingRect() const
 {
     qreal adjust = 2;
     return QRectF( -10 - adjust, -10 - adjust, 23 + adjust, 23 + adjust);
-}
+}*/
 //! [4]
 
 /*
@@ -72,7 +76,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 }
 
 //! [9]
-QPainterPath Node::shape() const
+/*QPainterPath Node::shape() const
 {
     QPainterPath path;
     path.addEllipse(-10, -10, 20, 20);
@@ -96,4 +100,22 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-10, -10, 20, 20);
+}*/
+
+QPixmap Node::image() const
+{
+    QPixmap pixmap(50, 50);
+    pixmap.fill( Qt::white );
+    QPainter painter(&pixmap);
+    painter.setPen(QPen(Qt::black, 8));
+    QPainterPath path;
+    QBrush fillbrush;
+    fillbrush.setColor(Qt::blue);
+    fillbrush.setStyle(Qt::SolidPattern);
+    painter.setBrush(Qt::red);
+    path.addEllipse(rectangle);
+    painter.fillPath(path,fillbrush);
+    painter.drawEllipse(rectangle);
+
+    return pixmap;
 }

@@ -2,24 +2,15 @@
 #include "node.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     scene = new GraphScene(this);
-    scene->setSceneRect(QRectF(0, 0, 5000, 5000));
-
-    connect(scene, SIGNAL(edgeInserted(Edge*)),
-            this, SLOT(edgeInserted(Edge*)));
-    connect(scene, SIGNAL(nodeInserted(Node*)),
-            this, SLOT(nodeInserted(Node*)));
-    connect(scene, SIGNAL(itemSelected(QGraphicsItem*)),
-            this, SLOT(itemSelected(QGraphicsItem*)));
-
-    //view = new QGraphicsView(scene);
+    scene->setSceneRect(QRectF(0, 0, 500, 500));
     ui->graphicsView->setScene(scene);
 }
 
@@ -27,66 +18,52 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-/*
-void MainWindow::edgeInserted(Edge *item)
-{
-    pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(true);
-    scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
-    buttonGroup->button(int(item->diagramType()))->setChecked(false);
-}*/
-//! [7]
 
-//! [8]
-void MainWindow::nodeInserted(Node *item)
+void MainWindow::setButtonUnchecked()
 {
-    /*pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(true);
-    scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
-    buttonGroup->button(int(item->diagramType()))->setChecked(false);*/
-}
-/*
-void MainWindow::deleteItem()
-{
-    foreach (QGraphicsItem *item, scene->selectedItems()) {
-        if (item->type() == Arrow::Type) {
-            scene->removeItem(item);
-            Arrow *arrow = qgraphicsitem_cast<Arrow *>(item);
-            arrow->startItem()->removeArrow(arrow);
-            arrow->endItem()->removeArrow(arrow);
-            delete item;
-        }
-    }
-
-    foreach (QGraphicsItem *item, scene->selectedItems()) {
-         if (item->type() == DiagramItem::Type)
-             qgraphicsitem_cast<DiagramItem *>(item)->removeArrows();
-         scene->removeItem(item);
-         delete item;
-     }
+    ui->actionCursor->setChecked(false);
+    ui->actionDelete->setChecked(false);
+    ui->actionNewEdge->setChecked(false);
+    ui->actionNewNode->setChecked(false);
 }
 
-void MainWindow::itemSelected(QGraphicsItem *item)
+void MainWindow::on_actionNewNode_triggered()
 {
-    DiagramTextItem *textItem =
-    qgraphicsitem_cast<DiagramTextItem *>(item);
-
-    QFont font = textItem->font();
-    QColor color = textItem->defaultTextColor();
-    fontCombo->setCurrentFont(font);
-    fontSizeCombo->setEditText(QString().setNum(font.pointSize()));
-    boldAction->setChecked(font.weight() == QFont::Bold);
-    italicAction->setChecked(font.italic());
-    underlineAction->setChecked(font.underline());
+    setButtonUnchecked();
+    ui->actionNewNode->setChecked(true);
+    scene->setCursorMode(GraphScene::InsertNode);
+    QCursor myCursor(QPixmap(":images/node.png"));
+    ui->graphicsView->setCursor(myCursor);
 }
 
-void MainWindow::pointerGroupClicked(int)
+void MainWindow::on_actionNewEdge_triggered()
 {
-    scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
+    setButtonUnchecked();
+    ui->actionNewEdge->setChecked(true);
+    scene->setCursorMode(GraphScene::InsertEdge);
+    QCursor myCursor(QPixmap(":images/linepointer.png"));
+    ui->graphicsView->setCursor(myCursor);
 }
 
-void MainWindow::about()
+void MainWindow::on_actionCursor_triggered()
 {
-    QMessageBox::about(this, tr("About Diagram Scene"),
-                       tr("The <b>Diagram Scene</b> example shows "
-                          "use of the graphics framework."));
+    setButtonUnchecked();
+    ui->actionCursor->setChecked(true);
+    scene->setCursorMode(GraphScene::MoveItem);
+    ui->graphicsView->setCursor(Qt::ArrowCursor);
 }
-*/
+
+void MainWindow::on_actionDelete_triggered()
+{
+    setButtonUnchecked();
+    ui->actionDelete->setChecked(true);
+    scene->setCursorMode(GraphScene::DeleteItem);
+    QCursor myCursor(QPixmap(":images/delete.png"));
+    ui->graphicsView->setCursor(myCursor);
+}
+
+void MainWindow::on_actionO_programu_triggered()
+{
+    QMessageBox::about(this, tr("About Dinizt's graph"),
+                       tr("lalalalalala"));
+}

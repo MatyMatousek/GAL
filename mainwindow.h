@@ -15,9 +15,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void setButtonUnchecked();
 
 private slots:
-    void nodeInserted(Node *item);
+    void on_actionNewNode_triggered();
+    void on_actionNewEdge_triggered();
+    void on_actionCursor_triggered();
+    void on_actionDelete_triggered();
+
+    void on_actionO_programu_triggered();
 
 private:
     Ui::MainWindow *ui;

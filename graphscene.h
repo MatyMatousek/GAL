@@ -11,16 +11,10 @@ class GraphScene : public QGraphicsScene
     Q_OBJECT
 public:
     explicit GraphScene(QObject *parent = 0);
+    enum CursorMode { InsertNode, InsertEdge, MoveItem, DeleteItem};
 
 public slots:
-    /*void setMode(Mode mode);
-    void setItemType(DiagramItem::DiagramType type);
-    void editorLostFocus(DiagramTextItem *item);*/
-
-signals:
-    void nodeInserted(Node *item);
-    void edgeInserted(Edge *item);
-    void itemSelected(QGraphicsItem *item);
+    void setCursorMode(CursorMode mode);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -30,14 +24,9 @@ protected:
 private:
     bool isItemChange(int type);
 
-    QMenu *myItemMenu;
-    bool leftButtonDown;
-    QPointF startPoint;
     QGraphicsLineItem *line;
-    QFont myFont;
-    QColor myTextColor;
-    QColor myItemColor;
     QColor myLineColor;
+    CursorMode cMode;
 
 };
 

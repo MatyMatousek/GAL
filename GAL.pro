@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
     graphscene.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    MyResources.qrc

@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <QGraphicsPixmapItem>
+#include <QGraphicsEllipseItem>
 #include <QList>
 
 class Edge;
@@ -14,13 +14,15 @@ public:
 
     void removeEdge(Edge *edge);
     void removeEdges();
-    QRectF polygon() const { return rectangle; }
+    QRectF rec() const { return rectangle; }
     void addEdge(Edge *edge);
-    QPixmap image() const;
     int type() const { return Type;}
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 private:
     QRectF rectangle;

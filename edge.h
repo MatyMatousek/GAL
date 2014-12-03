@@ -10,14 +10,13 @@ class Edge : public QGraphicsLineItem
 public:
     Edge(Node *sourceNode, Node *destinationNode, QGraphicsItem *parent = 0);
 
-    enum { Type = UserType +2 };
+    enum { Type = UserType + 2 };
     int type() const { return Type; }
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void setColor(const QColor &Color) { color = Color; }
     Node *sourceNode() const { return source; }
     Node *destinationNode() const { return destination; }
-
     void updatePosition();
 
 protected:

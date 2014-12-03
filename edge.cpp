@@ -1,5 +1,6 @@
 #include "edge.h"
 #include <math.h>
+#include <QDebug>
 
 #include <QPen>
 #include <QPainter>
@@ -35,11 +36,9 @@ QPainterPath Edge::shape() const
 void Edge::updatePosition()
 {
     QLineF line(mapFromItem(source, 0, 0), mapFromItem(destination, 0, 0));
-    setLine(line);
+    this->setLine(line);
 }
-//! [3]
 
-//! [4]
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
           QWidget *)
 {
@@ -51,26 +50,12 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     qreal arrowSize = 20;
     painter->setPen(myPen);
     painter->setBrush(color);
-//! [4] //! [5]
 
     QLineF centerLine(source->pos(), destination->pos());
-    QPolygonF endPolygon = destination->polygon();
-    QPointF p1 = endPolygon.first() + destination->pos();
-    QPointF p2;
-    QPointF intersectPoint;
-    QLineF polyLine;
-    for (int i = 1; i < endPolygon.count(); ++i) {
-    p2 = endPolygon.at(i) + destination->pos();
-    polyLine = QLineF(p1, p2);
-    QLineF::IntersectType intersectType =
-        polyLine.intersect(centerLine, &intersectPoint);
-    if (intersectType == QLineF::BoundedIntersection)
-        break;
-        p1 = p2;
-    }
+    centerLine.setLength(centerLine.length()-20.0);
 
-    setLine(QLineF(intersectPoint, source->pos()));
-//! [5] //! [6]
+    setLine(QLineF(centerLine.p2(), source->pos()));
+
 
     double angle = ::acos(line().dx() / line().length());
     if (line().dy() >= 0)
@@ -83,7 +68,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
         arrowHead.clear();
         arrowHead << line().p1() << arrowP1 << arrowP2;
-//! [6] //! [7]
         painter->drawLine(line());
         painter->drawPolygon(arrowHead);
         if (isSelected()) {

@@ -5,7 +5,7 @@
 TextValue::TextValue(QGraphicsItem *parent) :
     QGraphicsTextItem(parent)
 {
-    setPlainText("0");
+    setPlainText("0/0");
     setFlowValue(0);
     setCapacityValue(0);
 }
@@ -23,7 +23,7 @@ void TextValue::focusOutEvent(QFocusEvent *event)
     else
     {
         setFlowValue(0);
-        setPlainText("0");
+        setPlainText("0/0");
     }
 
     QGraphicsTextItem::focusOutEvent(event);
@@ -42,3 +42,7 @@ void TextValue::keyPressEvent(QKeyEvent *event)
     QGraphicsTextItem::keyPressEvent(event);
 }
 
+void TextValue::updateText()
+{
+    setPlainText(QString("%1/%2").arg(flow).arg(capacity));
+}

@@ -17,6 +17,7 @@ public:
     int getCapacityValue() const { return capacity; }
     void setFlowValue(const int Flow) { flow = Flow; }
     void setCapacityValue(const int Capacity) { capacity = Capacity; }
+    void updateText();
 
 protected:
     void focusOutEvent(QFocusEvent *event);

@@ -97,6 +97,7 @@ void Edge::setTextObject(TextValue *object)
 void Edge::setFlow(int flow)
 {
     textV->setFlowValue(flow);
+    textV->updateText();
 }
 
 void Edge::setCapacite(int capacite)

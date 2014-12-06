@@ -113,6 +113,7 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             edge->setTextObject(textItem);
             //textItem->setPos(mouseEvent->scenePos());
             edge->updatePosition();
+            //edge->setFlow(8);
         }
     }
 

@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     scene = new GraphScene(this);
-    scene->setSceneRect(QRectF(0, 0, 500, 500));
+    scene->setSceneRect(QRectF(0, 0, 800, 400));
     ui->graphicsView->setScene(scene);
 }
 

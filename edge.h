@@ -2,8 +2,10 @@
 #define EDGE_H
 
 #include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
 
 #include "node.h"
+#include "textvalue.h"
 
 class Edge : public QGraphicsLineItem
 {
@@ -18,11 +20,18 @@ public:
     Node *sourceNode() const { return source; }
     Node *destinationNode() const { return destination; }
     void updatePosition();
+    void setTextObject(TextValue *object);
+    TextValue *getTextObject() const { return textV; }
+    void setFlow(int flow);
+    void setCapacite(int capacite);
+    int getFlow();
+    int getCapacite();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 private:
+    TextValue *textV;
     Node *source;
     Node *destination;
     QColor color;

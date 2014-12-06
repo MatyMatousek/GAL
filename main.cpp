@@ -9,3 +9,17 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+/**
+ *
+ * TODO:
+ *
+ * start, cil uzel
+ * nazev uzlu, ohodnoceni hran, kontrola zpetne hrany
+ * krokovani, prehrani, reset
+ * algoritmus
+ * clear
+ * postrani seznam s kroky alg.
+ * zoom platna
+ * ulozeni, nacteni
+ *
+*/

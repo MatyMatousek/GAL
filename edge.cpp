@@ -12,8 +12,9 @@ Edge::Edge(Node *sourceNode, Node *destinationNode, QGraphicsItem *parent)
     source = sourceNode;
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     color = Qt::black;
-    setZValue(-1000.0);
+    setZValue(1000.0);
     setPen(QPen(color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
 }
 
 QRectF Edge::boundingRect() const
@@ -37,6 +38,14 @@ void Edge::updatePosition()
 {
     QLineF line(mapFromItem(source, 0, 0), mapFromItem(destination, 0, 0));
     this->setLine(line);
+    textV->setPos((mapFromItem(source, 0, 0).x()+mapFromItem(destination, 0, 0).x())/2 + 2, (mapFromItem(source, 0, 0).y()+mapFromItem(destination, 0, 0).y())/2 + 10);
+    //qDebug() << textV->pos();
+    if (collidesWithItem(textV, Qt::IntersectsItemShape))
+    {
+        //qDebug() << "collission";
+        //textV->setPos((mapFromItem(source, 0, 0).x()+mapFromItem(destination, 0, 0).x())/2 + 2, (mapFromItem(source, 0, 0).y()+mapFromItem(destination, 0, 0).y())/2 -10);
+    }
+    //qDebug() << textV->pos();
 }
 
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
@@ -56,26 +65,51 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
     setLine(QLineF(centerLine.p2(), source->pos()));
 
-
     double angle = ::acos(line().dx() / line().length());
     if (line().dy() >= 0)
         angle = (3.14 * 2) - angle;
 
-        QPointF arrowP1 = line().p1() + QPointF(sin(angle + 3.14 / 3) * arrowSize,
-                                        cos(angle + 3.14 / 3) * arrowSize);
-        QPointF arrowP2 = line().p1() + QPointF(sin(angle + 3.14 - 3.14 / 3) * arrowSize,
-                                        cos(angle + 3.14 - 3.14 / 3) * arrowSize);
+    QPointF arrowP1 = line().p1() + QPointF(sin(angle + 3.14 / 3) * arrowSize,
+                                    cos(angle + 3.14 / 3) * arrowSize);
+    QPointF arrowP2 = line().p1() + QPointF(sin(angle + 3.14 - 3.14 / 3) * arrowSize,
+                                    cos(angle + 3.14 - 3.14 / 3) * arrowSize);
 
-        arrowHead.clear();
-        arrowHead << line().p1() << arrowP1 << arrowP2;
-        painter->drawLine(line());
-        painter->drawPolygon(arrowHead);
-        if (isSelected()) {
-            painter->setPen(QPen(color, 1, Qt::DashLine));
+    arrowHead.clear();
+    arrowHead << line().p1() << arrowP1 << arrowP2;
+    painter->drawLine(line());
+    painter->drawPolygon(arrowHead);
+    if (isSelected()) {
+        painter->setPen(QPen(color, 1, Qt::DashLine));
         QLineF myLine = line();
         myLine.translate(0, 4.0);
         painter->drawLine(myLine);
         myLine.translate(0,-8.0);
         painter->drawLine(myLine);
     }
+}
+
+void Edge::setTextObject(TextValue *object)
+{
+    textV = object;
+    //connect(object, SIGNAL(textChange(int)), this, SLOT(setCap(int)));
+}
+
+void Edge::setFlow(int flow)
+{
+    textV->setFlowValue(flow);
+}
+
+void Edge::setCapacite(int capacite)
+{
+    textV->setCapacityValue(capacite);
+}
+
+int Edge::getFlow()
+{
+    return textV->getFlowValue();
+}
+
+int Edge::getCapacite()
+{
+    return textV->getCapacityValue();
 }

@@ -2,6 +2,7 @@
 #include "edge.h"
 #include "node.h"
 #include <QDebug>
+#include <QTextCursor>
 
 GraphScene::GraphScene(QObject *parent) :
     QGraphicsScene(parent)
@@ -13,7 +14,9 @@ GraphScene::GraphScene(QObject *parent) :
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() != Qt::LeftButton)
+    {
         return;
+    }
     QList<QGraphicsItem *> deleteItems;
     switch (cMode)
     {
@@ -22,6 +25,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                                         mouseEvent->scenePos()));
             line->setPen(QPen(myLineColor, 2));
             addItem(line);
+
             break;
 
         case InsertNode:
@@ -29,6 +33,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             item = new Node();
 
             addItem(item);
+            qDebug() << item;
             item->setPos(mouseEvent->scenePos());
             break;
 
@@ -41,7 +46,9 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     Edge *edge = qgraphicsitem_cast<Edge *>(deleteItems.first());
                     edge->sourceNode()->removeEdge(edge);
                     edge->destinationNode()->removeEdge(edge);
+                    removeItem(edge->getTextObject());
                     removeItem(edge);
+                    delete edge->getTextObject();
                     delete edge;
                 }
                 else
@@ -51,7 +58,6 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     removeItem(node);
                     delete node;
                 }
-
             }
             break;
 
@@ -98,13 +104,23 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             endItem->addEdge(edge);
             edge->setZValue(-1000.0);
             addItem(edge);
+
+            TextValue *textItem = new TextValue();
+            //textItem->setFont(QFont("Times", 10));
+            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+            textItem->setZValue(-1000.0);
+            addItem(textItem);
+            edge->setTextObject(textItem);
+            //textItem->setPos(mouseEvent->scenePos());
             edge->updatePosition();
         }
     }
+
+
     line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
-
+/*
 bool GraphScene::isItemChange(int type)
 {
     foreach (QGraphicsItem *item, selectedItems()) {
@@ -112,4 +128,4 @@ bool GraphScene::isItemChange(int type)
             return true;
     }
     return false;
-}
+}*/

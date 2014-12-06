@@ -22,7 +22,6 @@ private slots:
     void on_actionNewEdge_triggered();
     void on_actionCursor_triggered();
     void on_actionDelete_triggered();
-
     void on_actionO_programu_triggered();
 
 private:

@@ -29,6 +29,8 @@ void Node::removeEdges()
         edge->sourceNode()->removeEdge(edge);
         edge->destinationNode()->removeEdge(edge);
         scene()->removeItem(edge);
+        scene()->removeItem(edge->getTextObject());
+        delete edge->getTextObject();
         delete edge;
     }
 }

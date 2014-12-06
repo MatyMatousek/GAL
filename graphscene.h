@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include "node.h"
 #include "edge.h"
+#include "textvalue.h"
 #include <QGraphicsSceneMouseEvent>
 
 class GraphScene : public QGraphicsScene
@@ -16,6 +17,9 @@ public:
 public slots:
     void setCursorMode(CursorMode mode);
 
+signals:
+    void change(int cap);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -27,7 +31,6 @@ private:
     QGraphicsLineItem *line;
     QColor myLineColor;
     CursorMode cMode;
-
 };
 
 #endif // GRAPHSCENE_H

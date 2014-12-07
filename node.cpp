@@ -10,6 +10,8 @@
 Node::Node(QGraphicsItem *parent)
     : QGraphicsEllipseItem(parent)
 {
+    name = "";
+    color = Qt::white;
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -66,7 +68,7 @@ QPainterPath Node::shape() const
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
-    QBrush fillNode(Qt::white, Qt::SolidPattern);
+    QBrush fillNode(color, Qt::SolidPattern);
     if (isSelected()) {
         QRect rec(-20, -20, 40, 40);
         painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
@@ -76,4 +78,5 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     painter->setPen(QPen(Qt::black, 1));
     painter->drawEllipse(-20, -20, 40, 40);
+    painter->drawText(QRectF(-15, -15, 30, 30), Qt::AlignCenter, name);
 }

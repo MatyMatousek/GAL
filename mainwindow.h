@@ -24,6 +24,10 @@ private slots:
     void on_actionDelete_triggered();
     void on_actionO_programu_triggered();
 
+    void on_actionStart_triggered();
+
+    void on_actionCil_triggered();
+
 private:
     Ui::MainWindow *ui;
 

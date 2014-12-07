@@ -148,6 +148,8 @@
    <addaction name="actionNewNode"/>
    <addaction name="actionNewEdge"/>
    <addaction name="actionDelete"/>
+   <addaction name="actionStart"/>
+   <addaction name="actionCil"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionKonec">
@@ -231,6 +233,16 @@
   <action name="actionO_programu">
    <property name="text">
     <string>O programu</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actionCil">
+   <property name="text">
+    <string>Cíl</string>
    </property>
   </action>
  </widget>

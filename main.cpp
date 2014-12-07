@@ -13,8 +13,7 @@ int main(int argc, char *argv[])
  *
  * TODO:
  *
- * start, cil uzel
- * nazev uzlu, ohodnoceni hran, kontrola zpetne hrany
+ * kontrola zpetne hrany
  * krokovani, prehrani, reset
  * algoritmus
  * clear

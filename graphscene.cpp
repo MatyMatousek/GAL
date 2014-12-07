@@ -9,6 +9,9 @@ GraphScene::GraphScene(QObject *parent) :
 {
     line = 0;
     cMode = MoveItem;
+    nodeValue = 0;
+    start = NULL;
+    end = NULL;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -32,8 +35,10 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             Node *item;
             item = new Node();
 
+            item->setName(QString("%1").arg(nodeValue));
             addItem(item);
-            qDebug() << item;
+            nodeValue++;
+            //qDebug() << item;
             item->setPos(mouseEvent->scenePos());
             break;
 
@@ -60,7 +65,6 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
             }
             break;
-
         default:;
     }
     QGraphicsScene::mousePressEvent(mouseEvent);
@@ -96,7 +100,9 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         delete line;
 
         if (startItems.count() > 0 && endItems.count() > 0 &&
-            startItems.first() != endItems.first()) {
+            startItems.first() != endItems.first() &&
+            startItems.first()->type() == Node::Type &&
+            endItems.first()->type() == Node::Type) {
             Node *startItem = qgraphicsitem_cast<Node *>(startItems.first());
             Node *endItem = qgraphicsitem_cast<Node *>(endItems.first());
             Edge *edge = new Edge(startItem, endItem);
@@ -120,6 +126,42 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+}
+
+void GraphScene::setStart()
+{
+    if (!selectedItems().isEmpty() && selectedItems().first()->type() == Node::Type)
+    {
+        Node *node = qgraphicsitem_cast<Node *>(selectedItems().first());
+        if (start != NULL)
+        {
+            start->setColor(Qt::white);
+            start = NULL;
+        }
+        node->setColor(Qt::green);
+        start = node;
+        if (start == end)
+            end = NULL;
+    }
+    update();
+}
+
+void GraphScene::setEnd()
+{
+    if (!selectedItems().isEmpty() && selectedItems().first()->type() == Node::Type)
+    {
+        Node *node = qgraphicsitem_cast<Node *>(selectedItems().first());
+        if (end != NULL)
+        {
+            end->setColor(Qt::white);
+            end = NULL;
+        }
+        node->setColor(Qt::red);
+        end = node;
+        if (end == start)
+            start = NULL;
+    }
+    update();
 }
 /*
 bool GraphScene::isItemChange(int type)

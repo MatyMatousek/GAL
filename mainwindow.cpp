@@ -67,3 +67,13 @@ void MainWindow::on_actionO_programu_triggered()
     QMessageBox::about(this, tr("About Dinizt's graph"),
                        tr("lalalalalala"));
 }
+
+void MainWindow::on_actionStart_triggered()
+{
+    scene->setStart();
+}
+
+void MainWindow::on_actionCil_triggered()
+{
+    scene->setEnd();
+}

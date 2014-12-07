@@ -13,6 +13,8 @@ class GraphScene : public QGraphicsScene
 public:
     explicit GraphScene(QObject *parent = 0);
     enum CursorMode { InsertNode, InsertEdge, MoveItem, DeleteItem};
+    void setStart();
+    void setEnd();
 
 public slots:
     void setCursorMode(CursorMode mode);
@@ -27,7 +29,10 @@ protected:
 
 private:
     bool isItemChange(int type);
+    int nodeValue;
 
+    Node *start;
+    Node *end;
     QGraphicsLineItem *line;
     QColor myLineColor;
     CursorMode cMode;

@@ -21,6 +21,7 @@ public:
 
 protected:
     void focusOutEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 

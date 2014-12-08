@@ -5,9 +5,9 @@
 TextValue::TextValue(QGraphicsItem *parent) :
     QGraphicsTextItem(parent)
 {
-    setPlainText("0/0");
+    setPlainText("0/3");
     setFlowValue(0);
-    setCapacityValue(0);
+    setCapacityValue(3);
 }
 
 void TextValue::focusOutEvent(QFocusEvent *event)

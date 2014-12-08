@@ -1,6 +1,7 @@
 #include "edge.h"
 #include <math.h>
 #include <QDebug>
+#include <iostream>
 
 #include <QPen>
 #include <QPainter>
@@ -14,7 +15,6 @@ Edge::Edge(Node *sourceNode, Node *destinationNode, QGraphicsItem *parent)
     color = Qt::black;
     setZValue(1000.0);
     setPen(QPen(color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
 }
 
 QRectF Edge::boundingRect() const
@@ -103,6 +103,7 @@ void Edge::setFlow(int flow)
 void Edge::setCapacite(int capacite)
 {
     textV->setCapacityValue(capacite);
+    std::cout << capacite << std::endl;
 }
 
 int Edge::getFlow()

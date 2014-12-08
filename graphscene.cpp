@@ -3,6 +3,9 @@
 #include "node.h"
 #include <QDebug>
 #include <QTextCursor>
+#include <iostream>
+
+
 
 GraphScene::GraphScene(QObject *parent) :
     QGraphicsScene(parent)
@@ -12,6 +15,16 @@ GraphScene::GraphScene(QObject *parent) :
     nodeValue = 0;
     start = NULL;
     end = NULL;
+
+    maxnodes = 100;
+    dist = new int[maxnodes];
+    queue = new int[maxnodes];
+    work = new int[maxnodes];
+    adj = new std::vector<myEdge>[maxnodes];
+    src = dest = -1;
+
+    //promenne pro krokovani
+    state = init;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -36,6 +49,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             item = new Node();
 
             item->setName(QString("%1").arg(nodeValue));
+            item->setValue( nodeValue );
             addItem(item);
             nodeValue++;
             //qDebug() << item;
@@ -53,6 +67,9 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     edge->destinationNode()->removeEdge(edge);
                     removeItem(edge->getTextObject());
                     removeItem(edge);
+
+                    deleteEdge(edge->sourceNode()->getValue(),edge->destinationNode()->getValue(),edge);
+
                     delete edge->getTextObject();
                     delete edge;
                 }
@@ -120,6 +137,7 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             //textItem->setPos(mouseEvent->scenePos());
             edge->updatePosition();
             //edge->setFlow(8);
+            addEdge(startItem->getValue(),endItem->getValue(),edge->getCapacite(),edge);
         }
     }
 
@@ -139,6 +157,7 @@ void GraphScene::setStart()
             start = NULL;
         }
         node->setColor(Qt::green);
+        src = node->getValue();
         start = node;
         if (start == end)
             end = NULL;
@@ -157,6 +176,7 @@ void GraphScene::setEnd()
             end = NULL;
         }
         node->setColor(Qt::red);
+        dest = node->getValue();
         end = node;
         if (end == start)
             start = NULL;
@@ -172,3 +192,188 @@ bool GraphScene::isItemChange(int type)
     }
     return false;
 }*/
+
+bool GraphScene::dinic_bfs()
+{
+  std::fill(dist, dist + maxnodes, -1);
+  dist[src] = 0;
+  int qt = 0;
+  queue[qt++] = src;
+  for (int qh = 0; qh < qt; qh++) {
+    int u = queue[qh];
+    for (int j = 0; j < (int) adj[u].size(); j++) {
+      myEdge &e = adj[u][j];
+      int v = e.to;
+      if (dist[v] < 0 && e.f < e.cap) {
+        dist[v] = dist[u] + 1;
+        queue[qt++] = v;
+      }
+    }
+  }
+  return dist[dest] >= 0;
+}
+
+int GraphScene::dinic_dfs(int u, int f)
+{
+  if (u == dest)
+  {
+    return f;
+  }
+  for (int &i = work[u]; i < (int) adj[u].size(); i++)
+  {
+    myEdge &e = adj[u][i];
+    if (e.cap <= e.f) continue;
+    int v = e.to;
+    if (dist[v] == dist[u] + 1)
+    {
+      int df = dinic_dfs(v, std::min(f, e.cap - e.f));
+      //tady vsechny coloring_edge.push_back(adj[u][i]);
+      if (df > 0)
+      {
+        coloring_edge.push_back(adj[u][i]);
+        e.f += df;
+        e.edge->setFlow(e.f);
+        adj[v][e.ref ].f -= df ;
+        //adj[v][e.ref ].edge->setFlow( adj[v][e.ref ].f );
+        return df;
+      }
+    }
+
+  }
+  return 0;
+}
+
+int GraphScene::maxFlow()
+{
+  if ( src == -1 || dest == -1 ) return -1;
+  int result = 0;
+  while (dinic_bfs())
+  {
+    coloring_edge.clear();
+    std::fill(work, work + maxnodes, 0);
+    while (int delta = dinic_dfs(src, INT_MAX))
+    {
+      result += delta;
+      if ( delta != 0 )
+      {
+        for( std::vector<myEdge>::iterator it = coloring_edge.begin(); it != coloring_edge.end(); it++)
+        {
+            (*it).edge->setColor(Qt::red);
+        }
+        update();
+      }
+    }
+    update();
+  }
+  return result;
+}
+
+// Adds bidirectional edge
+void GraphScene::addEdge(int s, int t, int cap, Edge *e){
+  myEdge a = {t, (int)adj[t].size(), 0, cap,e};
+  myEdge b = {s, (int)adj[s].size(), 0, cap,e};
+  adj[s].push_back(a);
+  adj[t].push_back(b);
+  a.edge = e;
+  b.edge = e;
+}
+
+void GraphScene::deleteEdge(int s, int t, Edge *e)
+{
+    for ( std::vector<myEdge>::iterator it = adj[s].begin(); it != adj[s].end(); ++it)
+    {
+        if ( (*it).edge == e)
+        {
+            std::cout << "1"<<std::endl;
+            adj[s].erase(it);
+            break;
+        }
+    }
+    for ( std::vector<myEdge>::iterator it = adj[t].begin() ; it != adj[t].end() ; ++it)
+    {
+        if ( (*it).edge == e)
+        {
+            adj[t].erase(it);
+            break;
+        }
+
+    }
+}
+
+void GraphScene::resetSteps()
+{
+    for ( int i = 0; i < maxnodes;i++)
+    {
+        for( std::vector<myEdge>::iterator it = adj[i].begin(); it < adj[i].end(); it++)
+        {
+            (*it).edge->setFlow(0);
+            (*it).edge->setColor( Qt::black);
+            (*it).f = 0;
+        }
+    }
+    // nulovani krokovaciho algoritmu
+    state = init;
+    update();
+}
+
+void GraphScene::makeStep()
+{
+    static int result = 0;
+    static int qt = 0;
+    static int BFSstep_qh = 0;
+    static int BFSstep_j = 0;
+
+    switch( state )
+    {
+        case init:
+            result = 0;
+            std::fill(work, work + maxnodes, 0);
+            coloring_edge.clear();
+            std::fill(dist, dist + maxnodes, -1);
+            state = BFSstep;
+            dist[src] = 0;
+            result = 0;
+            qt = 0;
+            BFSstep_j = 0;
+            BFSstep_qh = 0;
+            queue[qt++] = src;
+
+
+        case BFSstep:
+            for (int qh = BFSstep_qh; qh < qt; qh++)
+            {
+              int u = queue[qh];
+              for (int j = BFSstep_j; j < (int) adj[u].size(); j++)
+              {
+                myEdge &e = adj[u][j];
+                int v = e.to;
+                if (dist[v] < 0 && e.f < e.cap)
+                {
+                  dist[v] = dist[u] + 1;
+                  queue[qt++] = v;
+                  //ukonceni kroku
+                }
+                if ( BFSstep_j == (int) adj[u].size() -1  )
+                {
+                    BFSstep_j = 0;
+                    BFSstep_qh++;
+                }
+                BFSstep_j++;
+                e.edge->setColor(Qt::green);
+                update();
+                //return;
+              }
+            }
+            if (dist[dest] >= 0) // nalezen koncovy uzel
+                state = DFSstep;
+            break;
+
+       case DFSstep:
+
+
+        break;
+    default:break;
+    }
+      update();
+
+}

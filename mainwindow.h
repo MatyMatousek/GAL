@@ -17,6 +17,7 @@ public:
     ~MainWindow();
     void setButtonUnchecked();
 
+
 private slots:
     void on_actionNewNode_triggered();
     void on_actionNewEdge_triggered();
@@ -27,6 +28,10 @@ private slots:
     void on_actionStart_triggered();
 
     void on_actionCil_triggered();
+
+    void on_actionNextstep();
+    void on_actionResetsteps();
+    void on_actionMakeAllSteps();
 
 private:
     Ui::MainWindow *ui;

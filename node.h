@@ -21,6 +21,8 @@ public:
     QPainterPath shape() const;
     void setName(const QString Name) { name = Name; }
     void setColor(const QColor &Color) { color = Color; }
+    void setValue(int num) { value = num;}
+    int getValue(){ return value;}
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -31,6 +33,8 @@ private:
     QString name;
     QRectF rectangle;
     QList<Edge *> edges;
+
+    int value;
 };
 
 #endif // NODE_H

@@ -70,21 +70,21 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="resetStep">
            <property name="text">
             <string>&lt;&lt;</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="nextStep">
            <property name="text">
             <string>|&gt;</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="makeAllSteps">
            <property name="text">
             <string>&gt;&gt;</string>
            </property>

@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new GraphScene(this);
     scene->setSceneRect(QRectF(0, 0, 800, 400));
     ui->graphicsView->setScene(scene);
+    connect(ui->nextStep,SIGNAL(clicked()),this,SLOT(on_actionNextstep()));
+    connect(ui->resetStep,SIGNAL(clicked()),this,SLOT(on_actionResetsteps()));
+    connect(ui->makeAllSteps,SIGNAL(clicked()),this,SLOT(on_actionMakeAllSteps()));
 }
 
 MainWindow::~MainWindow()
@@ -76,4 +80,21 @@ void MainWindow::on_actionStart_triggered()
 void MainWindow::on_actionCil_triggered()
 {
     scene->setEnd();
+}
+
+void MainWindow::on_actionNextstep()
+{
+    //std::cout << "push the button" << std::endl;
+
+    scene->makeStep();
+}
+
+void MainWindow::on_actionResetsteps()
+{
+    scene->resetSteps();
+}
+
+void MainWindow::on_actionMakeAllSteps()
+{
+    std::cout << scene->maxFlow() << std::endl;
 }

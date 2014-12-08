@@ -7,6 +7,13 @@
 #include "textvalue.h"
 #include <QGraphicsSceneMouseEvent>
 
+struct myEdge
+{
+    int to,ref;
+    int f,cap;
+    Edge* edge;
+};
+
 class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -15,6 +22,14 @@ public:
     enum CursorMode { InsertNode, InsertEdge, MoveItem, DeleteItem};
     void setStart();
     void setEnd();
+    void makeStep();
+    bool dinic_bfs();
+    int dinic_dfs(int u,int f);
+    int maxFlow();
+    void addEdge(int s, int t, int cap, Edge *e);
+    void deleteEdge(int s, int t, Edge *e);
+    void resetSteps();
+    enum {init,BFSstep,DFSstep};
 
 public slots:
     void setCursorMode(CursorMode mode);
@@ -36,6 +51,17 @@ private:
     QGraphicsLineItem *line;
     QColor myLineColor;
     CursorMode cMode;
+
+    //algoritmus
+    int src,dest;
+    int maxnodes;
+    int* dist,*queue,*work;
+    std::vector<myEdge>* adj;
+    std::vector<myEdge> coloring_edge;
+
+    // promenne pro krokovani..
+    int state;
+
 };
 
 #endif // GRAPHSCENE_H

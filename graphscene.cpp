@@ -25,6 +25,7 @@ GraphScene::GraphScene(QObject *parent) :
 
     //promenne pro krokovani
     state = init;
+    bottleneck = NULL;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -227,9 +228,10 @@ int GraphScene::dinic_dfs(int u, int f)
     if (dist[v] == dist[u] + 1)
     {
       int df = dinic_dfs(v, std::min(f, e.cap - e.f));
-      //tady vsechny coloring_edge.push_back(adj[u][i]);
       if (df > 0)
       {
+        if ( f == std::min(f, e.cap - e.f) && bottleneck == NULL )
+             bottleneck = &adj[u][i];
         coloring_edge.push_back(adj[u][i]);
         e.f += df;
         e.edge->setFlow(e.f);
@@ -261,6 +263,11 @@ int GraphScene::maxFlow()
             (*it).edge->setColor(Qt::red);
         }
         update();
+      }
+      if ( bottleneck != NULL )
+      {
+          bottleneck->edge->setColor(Qt::blue);
+          bottleneck = NULL;
       }
     }
     update();

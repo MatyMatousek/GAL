@@ -6,6 +6,8 @@
 #include "edge.h"
 #include "textvalue.h"
 #include <QGraphicsSceneMouseEvent>
+#include <iostream>
+#include <map>
 
 struct myEdge
 {
@@ -61,6 +63,7 @@ private:
 
     // promenne pro krokovani..
     int state;
+    myEdge* bottleneck;
 
 };
 

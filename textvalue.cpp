@@ -2,12 +2,13 @@
 #include <QDebug>
 #include <QKeyEvent>
 
+
 TextValue::TextValue(QGraphicsItem *parent) :
     QGraphicsTextItem(parent)
 {
-    setPlainText("0/3");
+    setPlainText("0/0");
     setFlowValue(0);
-    setCapacityValue(3);
+    setCapacityValue(0);
 }
 
 void TextValue::focusOutEvent(QFocusEvent *event)

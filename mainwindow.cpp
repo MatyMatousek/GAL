@@ -84,7 +84,6 @@ void MainWindow::on_actionCil_triggered()
 
 void MainWindow::on_actionNextstep()
 {
-    //std::cout << "push the button" << std::endl;
     scene->updateStructures();
     scene->makeStep();
 }
@@ -92,6 +91,7 @@ void MainWindow::on_actionNextstep()
 void MainWindow::on_actionResetsteps()
 {
     scene->resetSteps();
+    scene->maxflow = 0;
 }
 
 void MainWindow::on_actionMakeAllSteps()

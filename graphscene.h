@@ -33,7 +33,9 @@ public:
     void deleteEdge(int s, int t, Edge *e);
     void resetSteps();
     void updateStructures();
+    bool isInQueue(int*,int,int);
     enum {init,BFSstep,DFSstep,theend};
+    int maxflow;
 
 public slots:
     void setCursorMode(CursorMode mode);

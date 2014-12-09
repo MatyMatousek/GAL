@@ -11,6 +11,12 @@ TextValue::TextValue(QGraphicsItem *parent) :
     setCapacityValue(0);
 }
 
+void TextValue::focusInEvent(QFocusEvent *event)
+{
+    setPlainText(QString("%1").arg(capacity));
+    QGraphicsTextItem::focusInEvent(event);
+}
+
 void TextValue::focusOutEvent(QFocusEvent *event)
 {
     setTextInteractionFlags(Qt::NoTextInteraction);
@@ -28,8 +34,10 @@ void TextValue::focusOutEvent(QFocusEvent *event)
         setFlowValue(0);
         setPlainText("0/0");
     }
-
+    setFlowValue(0);
+    updateText();
     QGraphicsTextItem::focusOutEvent(event);
+    //qDebug() << getFlowValue();
 }
 
 void TextValue::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

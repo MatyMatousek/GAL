@@ -27,11 +27,13 @@ public:
     void makeStep();
     bool dinic_bfs();
     int dinic_dfs(int u,int f);
+    int dinic_dfs2(int u, int f, int index);
     int maxFlow();
     void addEdge(int s, int t, int cap, Edge *e);
     void deleteEdge(int s, int t, Edge *e);
     void resetSteps();
-    enum {init,BFSstep,DFSstep};
+    void updateStructures();
+    enum {init,BFSstep,DFSstep,theend};
 
 public slots:
     void setCursorMode(CursorMode mode);
@@ -63,7 +65,8 @@ private:
 
     // promenne pro krokovani..
     int state;
-    myEdge* bottleneck;
+    bool setbottleneck;
+    Edge* bottleneck;
 
 };
 

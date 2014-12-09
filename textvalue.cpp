@@ -19,10 +19,12 @@ void TextValue::focusOutEvent(QFocusEvent *event)
     int tmp = text.toInt(&ok, 10);
     if (tmp)
     {
-        setFlowValue(tmp);
+        //setFlowValue(tmp);
+        setCapacityValue(tmp);
     }
     else
     {
+        setCapacityValue(0);
         setFlowValue(0);
         setPlainText("0/0");
     }

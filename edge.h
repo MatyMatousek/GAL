@@ -26,6 +26,7 @@ public:
     void setCapacite(int capacite);
     int getFlow();
     int getCapacite();
+    QColor getColor(){return color;}
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);

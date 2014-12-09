@@ -26,6 +26,7 @@ GraphScene::GraphScene(QObject *parent) :
     //promenne pro krokovani
     state = init;
     bottleneck = NULL;
+    setbottleneck = false;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -194,6 +195,20 @@ bool GraphScene::isItemChange(int type)
     return false;
 }*/
 
+// prasarna jak hrom
+void GraphScene::updateStructures()
+{
+    for ( int i = 0 ; i < maxnodes; i++ )
+    {
+        for ( int j = 0 ; j < (int)adj[i].size() ; j++)
+        {
+            adj[i][j].f = adj[i][j].edge->getFlow();
+            adj[i][j].cap = adj[i][j].edge->getCapacite();
+        }
+    }
+}
+
+
 bool GraphScene::dinic_bfs()
 {
   std::fill(dist, dist + maxnodes, -1);
@@ -220,7 +235,7 @@ int GraphScene::dinic_dfs(int u, int f)
   {
     return f;
   }
-  for (int &i = work[u]; i < (int) adj[u].size(); i++)
+  for (int i = 0; i < (int) adj[u].size(); i++)
   {
     myEdge &e = adj[u][i];
     if (e.cap <= e.f) continue;
@@ -230,8 +245,45 @@ int GraphScene::dinic_dfs(int u, int f)
       int df = dinic_dfs(v, std::min(f, e.cap - e.f));
       if (df > 0)
       {
-        if ( f == std::min(f, e.cap - e.f) && bottleneck == NULL )
-             bottleneck = &adj[u][i];
+        if ( df == std::min(f, e.cap - e.f) )
+               bottleneck = e.edge;
+        coloring_edge.push_back(adj[u][i]);
+        e.f += df;
+        e.edge->setFlow(e.f);
+        adj[v][e.ref ].f -= df ;
+        //adj[v][e.ref ].edge->setFlow( adj[v][e.ref ].f );
+
+
+        return df;
+      }
+    }
+
+  }
+  return 0;
+}
+
+
+int GraphScene::dinic_dfs2(int u, int f,int index)
+{
+
+  if (u == dest)
+  {
+    return f;
+  }
+  int temp = adj[u].size() - index;
+  if ( index >= temp ) return -1;
+  for (int i = index; i < temp; i++)
+  {
+    myEdge &e = adj[u][i];
+    if (e.cap <= e.f) continue;
+    int v = e.to;
+    if (dist[v] == dist[u] + 1)
+    {
+      int df = dinic_dfs(v, std::min(f, e.cap - e.f));
+      if (df > 0)
+      {
+        if ( df == std::min(f, e.cap - e.f) )
+               bottleneck = e.edge;
         coloring_edge.push_back(adj[u][i]);
         e.f += df;
         e.edge->setFlow(e.f);
@@ -252,7 +304,7 @@ int GraphScene::maxFlow()
   while (dinic_bfs())
   {
     coloring_edge.clear();
-    std::fill(work, work + maxnodes, 0);
+    //std::fill(work, work + maxnodes, 0);
     while (int delta = dinic_dfs(src, INT_MAX))
     {
       result += delta;
@@ -260,13 +312,13 @@ int GraphScene::maxFlow()
       {
         for( std::vector<myEdge>::iterator it = coloring_edge.begin(); it != coloring_edge.end(); it++)
         {
-            (*it).edge->setColor(Qt::red);
+            if ((*it).edge->getColor() != Qt::blue) (*it).edge->setColor(Qt::red);
         }
         update();
       }
       if ( bottleneck != NULL )
       {
-          bottleneck->edge->setColor(Qt::blue);
+          bottleneck->setColor(Qt::blue);
           bottleneck = NULL;
       }
     }
@@ -291,7 +343,6 @@ void GraphScene::deleteEdge(int s, int t, Edge *e)
     {
         if ( (*it).edge == e)
         {
-            std::cout << "1"<<std::endl;
             adj[s].erase(it);
             break;
         }
@@ -329,17 +380,18 @@ void GraphScene::makeStep()
     static int qt = 0;
     static int BFSstep_qh = 0;
     static int BFSstep_j = 0;
+    static int index  = 0;
 
+    int delta;
     switch( state )
     {
         case init:
             result = 0;
-            std::fill(work, work + maxnodes, 0);
+            //std::fill(work, work + maxnodes, 0);
             coloring_edge.clear();
             std::fill(dist, dist + maxnodes, -1);
             state = BFSstep;
             dist[src] = 0;
-            result = 0;
             qt = 0;
             BFSstep_j = 0;
             BFSstep_qh = 0;
@@ -354,7 +406,7 @@ void GraphScene::makeStep()
               {
                 myEdge &e = adj[u][j];
                 int v = e.to;
-                if (dist[v] < 0 && e.f < e.cap)
+                if (dist[v] < 0 && e.f < e.cap) // pridani do seznamu
                 {
                   dist[v] = dist[u] + 1;
                   queue[qt++] = v;
@@ -366,7 +418,7 @@ void GraphScene::makeStep()
                     BFSstep_qh++;
                 }
                 BFSstep_j++;
-                e.edge->setColor(Qt::green);
+                if ( e.edge->getColor() == Qt::black) e.edge->setColor(Qt::green);
                 update();
                 //return;
               }
@@ -376,9 +428,44 @@ void GraphScene::makeStep()
             break;
 
        case DFSstep:
+          coloring_edge.clear();
+          while ( (delta = dinic_dfs2(src, INT_MAX,index)) == 0);
+          if ( delta == -1 ) { state = theend; break;}
+          result += delta;
+          for ( int i = 0; i < maxnodes; i++)
+          {
+              for( std::vector<myEdge>::iterator it = adj[i].begin(); it != adj[i].end(); it++)
+              {
+                  if ( (*it).edge->getColor() == Qt::green  )
+                  {
+                      (*it).edge->setColor(Qt::black);
+                  }
+              }
 
+          }
+          if ( delta != 0 )
+          {
+            for( std::vector<myEdge>::iterator it = coloring_edge.begin(); it != coloring_edge.end(); it++)
+            {
+                (*it).edge->setColor(Qt::red);
+            }
+          }
+          else
+          {
+              index++;
+          }
+          if ( bottleneck != NULL )
+          {
+              bottleneck->setColor(Qt::blue);
+              bottleneck = NULL;
+          }
+          update();
+          state = init;
 
         break;
+
+    case theend:
+        return;
     default:break;
     }
       update();

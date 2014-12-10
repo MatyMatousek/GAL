@@ -439,7 +439,7 @@ void GraphScene::makeStep()
           maxflow += delta;
           if ( !my_stack.empty())
           {
-            stackData temp = my_stack.top();
+            stackData &temp = my_stack.top();
             temp.maxflow = maxflow;
           }
           std::cout << maxflow << std::endl;
@@ -487,15 +487,14 @@ void GraphScene::makeStep()
 
 void GraphScene::pushStepOnStack()
 {
-    int pocitadylko = 0;
+    int pocitadylko = getNodeValue();
     stackData temp;
-    for ( int i = 0; i < maxnodes;i++)
+    /*for ( int i = 0; i < getNodeValue();i++)
     {
         if ( adj[i].size() != 0)
             pocitadylko++;
-        else break;
     }
-
+*/
     temp.adj = new std::vector<myEdge>[pocitadylko];
     for ( int i = 0 ; i < pocitadylko;i++ )
     {

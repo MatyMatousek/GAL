@@ -48,6 +48,7 @@ public:
     enum {init,BFSstep,DFSstep,theend};
     void pushStepOnStack();
     void popStepFromStack();
+    int getNodeValue(){ return nodeValue;}
     int maxflow;
 
 public slots:

@@ -104,7 +104,7 @@ void Edge::setCapacite(int capacite)
 {
     textV->setCapacityValue(capacite);
     textV->updateText();
-    std::cout << capacite << std::endl;
+    //std::cout << capacite << std::endl;
 }
 
 int Edge::getFlow()

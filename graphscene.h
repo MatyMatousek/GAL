@@ -22,6 +22,7 @@ struct stackData
     std::vector<myEdge>* adj;
     QColor** edge_colors;
     int state;
+    int index;
     Edge* bottleneck;
     int maxflow;
     int poc_prvku;
@@ -81,6 +82,7 @@ private:
     std::stack<stackData> my_stack;
 
     // promenne pro krokovani..
+    int index;
     int state;
     Edge* bottleneck;
 

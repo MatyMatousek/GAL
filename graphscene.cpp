@@ -27,6 +27,7 @@ GraphScene::GraphScene(QObject *parent) :
     state = init;
     bottleneck = NULL;
     maxflow = 0;
+    index = 0;
 }
 
 void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -363,6 +364,7 @@ void GraphScene::resetSteps()
     }
     // nulovani krokovaciho algoritmu
     state = init;
+    index = 0;
     update();
 }
 
@@ -378,7 +380,6 @@ bool GraphScene::isInQueue(int *que, int max, int prvek)
 
 void GraphScene::makeStep()
 {
-    static int index  = 0;
     int qt = 0;
     int temp = 0;
     bottleneck = NULL;
@@ -439,8 +440,8 @@ void GraphScene::makeStep()
           maxflow += delta;
           if ( !my_stack.empty())
           {
-            stackData &temp = my_stack.top();
-            temp.maxflow = maxflow;
+            //stackData &temp = my_stack.top();
+            //temp.maxflow = maxflow;
           }
           std::cout << maxflow << std::endl;
           for ( int i = 0; i < maxnodes; i++)
@@ -521,6 +522,7 @@ void GraphScene::pushStepOnStack()
     temp.state = state;
     temp.maxflow = maxflow;
     temp.poc_prvku = pocitadylko;
+    temp.index = index;
     my_stack.push(temp);
 
 }
@@ -533,6 +535,7 @@ void GraphScene::popStepFromStack()
     maxflow = temp.maxflow;
     state = temp.state;
     bottleneck = temp.bottleneck;
+    index = temp.index;
 
     for ( int i= 0;i < temp.poc_prvku ;i++)
     {

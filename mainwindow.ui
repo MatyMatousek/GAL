@@ -77,6 +77,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="previousStep">
+           <property name="text">
+            <string>&lt;|</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="nextStep">
            <property name="text">
             <string>|&gt;</string>

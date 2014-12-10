@@ -32,6 +32,7 @@ private slots:
     void on_actionNextstep();
     void on_actionResetsteps();
     void on_actionMakeAllSteps();
+    void on_actionPreviousStep();
 
 private:
     Ui::MainWindow *ui;

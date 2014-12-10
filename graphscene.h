@@ -7,13 +7,24 @@
 #include "textvalue.h"
 #include <QGraphicsSceneMouseEvent>
 #include <iostream>
-#include <map>
+#include <stack>
+
 
 struct myEdge
 {
     int to,ref;
     int f,cap;
     Edge* edge;
+};
+
+struct stackData
+{
+    std::vector<myEdge>* adj;
+    QColor** edge_colors;
+    int state;
+    Edge* bottleneck;
+    int maxflow;
+    int poc_prvku;
 };
 
 class GraphScene : public QGraphicsScene
@@ -35,6 +46,8 @@ public:
     void updateStructures();
     bool isInQueue(int*,int,int);
     enum {init,BFSstep,DFSstep,theend};
+    void pushStepOnStack();
+    void popStepFromStack();
     int maxflow;
 
 public slots:
@@ -64,10 +77,10 @@ private:
     int* dist,*queue,*work;
     std::vector<myEdge>* adj;
     std::vector<myEdge> coloring_edge;
+    std::stack<stackData> my_stack;
 
     // promenne pro krokovani..
     int state;
-    bool setbottleneck;
     Edge* bottleneck;
 
 };

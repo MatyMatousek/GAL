@@ -26,7 +26,6 @@ GraphScene::GraphScene(QObject *parent) :
     //promenne pro krokovani
     state = init;
     bottleneck = NULL;
-    setbottleneck = false;
     maxflow = 0;
 }
 
@@ -438,6 +437,11 @@ void GraphScene::makeStep()
           while ( (delta = dinic_dfs2(src, INT_MAX,index)) == 0);
           if ( delta == -1 ) { state = theend; break;}
           maxflow += delta;
+          if ( !my_stack.empty())
+          {
+            stackData temp = my_stack.top();
+            temp.maxflow = maxflow;
+          }
           std::cout << maxflow << std::endl;
           for ( int i = 0; i < maxnodes; i++)
           {
@@ -477,5 +481,81 @@ void GraphScene::makeStep()
     default:break;
     }
       update();
+
+}
+
+
+void GraphScene::pushStepOnStack()
+{
+    int pocitadylko = 0;
+    stackData temp;
+    for ( int i = 0; i < maxnodes;i++)
+    {
+        if ( adj[i].size() != 0)
+            pocitadylko++;
+        else break;
+    }
+
+    temp.adj = new std::vector<myEdge>[pocitadylko];
+    for ( int i = 0 ; i < pocitadylko;i++ )
+    {
+        for ( std::vector<myEdge>::iterator it = adj[i].begin() ; it != adj[i].end();it++ )
+            temp.adj[i].push_back(  *it );
+    }
+
+    QColor** barvicky = new QColor*[pocitadylko];
+    for ( int i = 0; i < pocitadylko ; i++)
+    {
+        barvicky[i] = new QColor[temp.adj[i].size()];
+    }
+
+    for ( int i = 0; i < pocitadylko; i++)
+    {
+        for ( int j = 0; j < (int) temp.adj[i].size(); j++)
+        {
+            barvicky[i][j] = temp.adj[i][j].edge->getColor();
+        }
+    }
+
+    temp.edge_colors = barvicky;
+    temp.bottleneck = bottleneck;
+    temp.state = state;
+    temp.maxflow = maxflow;
+    temp.poc_prvku = pocitadylko;
+    my_stack.push(temp);
+
+}
+
+
+void GraphScene::popStepFromStack()
+{
+    if ( my_stack.empty() ) return;
+    stackData &temp = my_stack.top();
+    maxflow = temp.maxflow;
+    state = temp.state;
+    bottleneck = temp.bottleneck;
+
+    for ( int i= 0;i < temp.poc_prvku ;i++)
+    {
+        adj[i].clear();
+        for( std::vector<myEdge>::iterator it = temp.adj[i].begin(); it != temp.adj[i].end(); it++)
+        {
+            adj[i].push_back( *it);
+        }
+        for ( int j = 0; j < (int) adj[i].size();j++)
+        {
+            adj[i][j].edge->setColor( temp.edge_colors[i][j]);
+            adj[i][j].edge->setFlow( adj[i][j].f);
+            adj[i][j].edge->setCapacite( adj[i][j].cap);
+        }
+        temp.adj[i].clear();
+    }
+
+    delete [] temp.adj;
+    for ( int i =0; i < temp.poc_prvku ;i++)
+        delete [] temp.edge_colors[i];
+    delete [] temp.edge_colors;
+
+    my_stack.pop();
 
 }

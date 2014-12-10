@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->nextStep,SIGNAL(clicked()),this,SLOT(on_actionNextstep()));
     connect(ui->resetStep,SIGNAL(clicked()),this,SLOT(on_actionResetsteps()));
     connect(ui->makeAllSteps,SIGNAL(clicked()),this,SLOT(on_actionMakeAllSteps()));
+    connect(ui->previousStep,SIGNAL(clicked()),this,SLOT(on_actionPreviousStep()));
 }
 
 MainWindow::~MainWindow()
@@ -85,7 +86,9 @@ void MainWindow::on_actionCil_triggered()
 void MainWindow::on_actionNextstep()
 {
     scene->updateStructures();
+    scene->pushStepOnStack();
     scene->makeStep();
+
 }
 
 void MainWindow::on_actionResetsteps()
@@ -98,5 +101,11 @@ void MainWindow::on_actionMakeAllSteps()
 {
     scene->updateStructures();
     std::cout << scene->maxFlow() << std::endl;
+}
+
+void MainWindow::on_actionPreviousStep()
+{
+    scene->popStepFromStack();
+    scene->update();
 }
 

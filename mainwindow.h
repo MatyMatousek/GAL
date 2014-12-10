@@ -34,6 +34,8 @@ private slots:
     void on_actionMakeAllSteps();
     void on_actionPreviousStep();
 
+    void on_actionNewGraph_triggered();
+
 private:
     Ui::MainWindow *ui;
 

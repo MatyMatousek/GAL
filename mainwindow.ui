@@ -72,28 +72,28 @@
          <item>
           <widget class="QPushButton" name="resetStep">
            <property name="text">
-            <string>&lt;&lt;</string>
+            <string>Reset</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="previousStep">
            <property name="text">
-            <string>&lt;|</string>
+            <string>&lt;&lt;</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="nextStep">
            <property name="text">
-            <string>|&gt;</string>
+            <string>&gt;&gt;</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="makeAllSteps">
            <property name="text">
-            <string>&gt;&gt;</string>
+            <string>Maximlní tok</string>
            </property>
           </widget>
          </item>
@@ -109,6 +109,26 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Maximální took:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="max_flow">
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -130,6 +150,7 @@
     <property name="title">
      <string>Soubor</string>
     </property>
+    <addaction name="actionNewGraph"/>
     <addaction name="actionOpenFile"/>
     <addaction name="actionSaveFile"/>
     <addaction name="separator"/>
@@ -250,6 +271,11 @@
   <action name="actionCil">
    <property name="text">
     <string>Cíl</string>
+   </property>
+  </action>
+  <action name="actionNewGraph">
+   <property name="text">
+    <string>Nový</string>
    </property>
   </action>
  </widget>

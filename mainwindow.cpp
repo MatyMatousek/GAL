@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new GraphScene(this);
     scene->setSceneRect(QRectF(0, 0, 800, 400));
     ui->graphicsView->setScene(scene);
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
     connect(ui->nextStep,SIGNAL(clicked()),this,SLOT(on_actionNextstep()));
     connect(ui->resetStep,SIGNAL(clicked()),this,SLOT(on_actionResetsteps()));
     connect(ui->makeAllSteps,SIGNAL(clicked()),this,SLOT(on_actionMakeAllSteps()));
@@ -88,24 +89,45 @@ void MainWindow::on_actionNextstep()
     scene->updateStructures();
     scene->pushStepOnStack();
     scene->makeStep();
-
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
 }
 
 void MainWindow::on_actionResetsteps()
 {
     scene->resetSteps();
     scene->maxflow = 0;
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
 }
 
 void MainWindow::on_actionMakeAllSteps()
 {
     scene->updateStructures();
     std::cout << scene->maxFlow() << std::endl;
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
 }
 
 void MainWindow::on_actionPreviousStep()
 {
     scene->popStepFromStack();
     scene->update();
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
 }
 
+
+void MainWindow::on_actionNewGraph_triggered()
+{
+    QList<QGraphicsItem*> allGraphicsItems = scene->items();
+    for(int i = 0; i < allGraphicsItems.size(); i++)
+    {
+      QGraphicsItem *graphicItem = allGraphicsItems[i];
+      scene->removeItem(graphicItem);
+      delete graphicItem;
+      scene->update();
+    }
+    delete scene;
+
+    scene = new GraphScene(this);
+    scene->setSceneRect(QRectF(0, 0, 800, 400));
+    ui->graphicsView->setScene(scene);
+    ui->max_flow->setText(QString("%1").arg(scene->maxflow));
+}

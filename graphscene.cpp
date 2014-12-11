@@ -4,8 +4,10 @@
 #include <QDebug>
 #include <QTextCursor>
 #include <iostream>
+#include <ogdf/basic/Graph.h>
+#include <ogdf/energybased/SpringEmbedderKK.h>
 
-
+using namespace ogdf;
 
 GraphScene::GraphScene(QObject *parent) :
     QGraphicsScene(parent)
@@ -560,4 +562,90 @@ void GraphScene::popStepFromStack()
 
     my_stack.pop();
 
+}
+
+void GraphScene::createGraph(QString fileName)
+{
+    Graph G;
+    GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
+    if( !GA.readGML(G, const_cast<char *>(qPrintable(fileName))) )
+    {
+        qDebug() << "Could not load " << fileName;
+        return;
+    }
+    SpringEmbedderKK KK;
+    //KK.setDesLength(150.0);
+    KK.call(GA);
+
+    QList<Node *> nodeList;
+    node v;
+    Node *N;
+    forall_nodes(v,G)
+    {
+        N = new Node();
+        nodeList.append(N);
+        N->setName(QString("%1").arg(nodeValue));
+        N->setValue( nodeValue );
+        addItem(N);
+        nodeValue++;
+        //qDebug() << GA.x(v) << GA.y(v);
+        N->setPos(GA.x(v),GA.y(v));
+    }
+    edge e;
+    Edge *E;
+    forall_edges(e,G)
+    {
+        Node *startItem = nodeList.at(e->source()->index());
+        Node *endItem = nodeList.at(e->target()->index());
+        E = new Edge(startItem,endItem);
+
+        startItem->addEdge(E);
+        endItem->addEdge(E);
+        E->setZValue(-1000.0);
+        addItem(E);
+
+        TextValue *textItem = new TextValue();
+        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+        textItem->setZValue(-1000.0);
+        addItem(textItem);
+        E->setTextObject(textItem);
+        E->updatePosition();
+        E->setCapacite(int(GA.doubleWeight(e)));
+        addEdge(startItem->getValue(),endItem->getValue(),E->getCapacite(),E);
+    }
+}
+
+void GraphScene::saveGraph(QString fileName)
+{
+    Graph G;
+    GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
+
+    QHash<QString, node> Nodes;
+    QList<Edge *> Edges;
+    Node *nodeItem;
+    foreach (QGraphicsItem *item, items())
+    {
+        if(item->type() == Node::Type)
+        {
+            nodeItem = qgraphicsitem_cast<Node *>(item);
+            node v = G.newNode();
+            GA.x(v) = nodeItem->pos().x();
+            GA.y(v) = nodeItem->pos().y();
+            Nodes.insert(nodeItem->getName(), v);
+        }
+        else if(item->type() == Edge::Type)
+        {
+            Edges.append(qgraphicsitem_cast<Edge *>(item));
+        }
+    }
+    edge e;
+    foreach (Edge *E, Edges)
+    {
+        e = G.newEdge(Nodes.value(E->sourceNode()->getName()), Nodes.value(E->destinationNode()->getName()));
+        GA.doubleWeight(e) = E->getCapacite();
+    }
+
+    SpringEmbedderKK KK;
+    KK.call(GA);
+    GA.writeGML(const_cast<char *>(qPrintable(fileName)));
 }

@@ -23,6 +23,7 @@ public:
     void setColor(const QColor &Color) { color = Color; }
     void setValue(int num) { value = num;}
     int getValue(){ return value;}
+    QString getName(){ return name;}
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

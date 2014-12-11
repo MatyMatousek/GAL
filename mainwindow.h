@@ -36,6 +36,9 @@ private slots:
 
     void on_actionNewGraph_triggered();
 
+    void on_actionOpenFile_triggered();
+
+    void on_actionSaveFile_triggered();
 private:
     Ui::MainWindow *ui;
 

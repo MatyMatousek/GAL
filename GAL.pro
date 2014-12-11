@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+include(gal.config)
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -11,6 +13,27 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = GAL
 TEMPLATE = app
 
+win32 {
+    CONFIG(debug, debug|release) {
+        LIBS += $$OGDF_INSTALL_PATH_DEBUG/ogdf.lib
+        DEFINES += OGDF_DEBUG
+    } else {
+        LIBS += $$OGDF_INSTALL_PATH_RELEASE/ogdf.lib
+    }
+    LIBS += Psapi.lib
+}
+
+!win32 {
+    CONFIG(debug, debug|release) {
+        LIBS += $$OGDF_INSTALL_PATH_DEBUG/libOGDF.a
+        DEFINES += OGDF_DEBUG
+    } else {
+        LIBS += $$OGDF_INSTALL_PATH_RELEASE/libOGDF.a
+    }
+}
+
+# add ogdf include path
+INCLUDEPATH += $$OGDF_INCLUDE_PATH
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -4,6 +4,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <iostream>
+#include <QFileDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -130,4 +132,29 @@ void MainWindow::on_actionNewGraph_triggered()
     scene->setSceneRect(QRectF(0, 0, 800, 400));
     ui->graphicsView->setScene(scene);
     ui->max_flow->setText(QString("%1").arg(scene->maxflow));
+}
+
+void MainWindow::on_actionOpenFile_triggered()
+{
+    QFileDialog openFile;
+
+    QString file = openFile.getOpenFileName(this, tr("Otevřít soubor"), "", tr("*.gml"));
+
+    if(file != "")
+    {
+        on_actionNewGraph_triggered();
+        scene->createGraph(file);
+    }
+}
+
+void MainWindow::on_actionSaveFile_triggered()
+{
+    QFileDialog saceFile;
+
+    QString file = saceFile.getSaveFileName(this, tr("Uložít soubor"), "", tr("*.gml"));
+
+    if(file != "")
+    {
+        scene->saveGraph(file);
+    }
 }

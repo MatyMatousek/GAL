@@ -51,6 +51,9 @@ public:
     void popStepFromStack();
     int getNodeValue(){ return nodeValue;}
     int maxflow;
+    void createGraph(QString fileName);
+    void saveGraph(QString fileName);
+
 
 public slots:
     void setCursorMode(CursorMode mode);

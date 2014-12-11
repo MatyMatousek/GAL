@@ -20,7 +20,7 @@ win32 {
     } else {
         LIBS += $$OGDF_INSTALL_PATH_RELEASE/ogdf.lib
     }
-    LIBS += Psapi.lib
+    #LIBS += Psapi.lib
 }
 
 !win32 {

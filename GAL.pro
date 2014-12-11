@@ -20,7 +20,6 @@ win32 {
     } else {
         LIBS += $$OGDF_INSTALL_PATH_RELEASE/ogdf.lib
     }
-    #LIBS += Psapi.lib
 }
 
 !win32 {
@@ -50,5 +49,4 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RESOURCES += \
-    MyResources.qrc
+RESOURCES += MyResources.qrc

@@ -188,15 +188,6 @@ void GraphScene::setEnd()
     }
     update();
 }
-/*
-bool GraphScene::isItemChange(int type)
-{
-    foreach (QGraphicsItem *item, selectedItems()) {
-        if (item->type() == type)
-            return true;
-    }
-    return false;
-}*/
 
 // prasarna jak hrom
 void GraphScene::updateStructures()

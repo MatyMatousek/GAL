@@ -14,9 +14,7 @@ int main(int argc, char *argv[])
  * TODO:
  *
  * kontrola zpetne hrany
- * clear
  * postrani seznam s kroky alg.
  * zoom platna
- * ulozeni, nacteni
  *
 */

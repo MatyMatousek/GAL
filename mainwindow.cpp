@@ -72,8 +72,11 @@ void MainWindow::on_actionDelete_triggered()
 
 void MainWindow::on_actionO_programu_triggered()
 {
-    QMessageBox::about(this, tr("About Dinizt's graph"),
-                       tr("lalalalalala"));
+    QMessageBox::about(this, tr("About Dinitz's algorithm demo"),
+                       tr("Dinicův algoritmus - demostrační aplikace\n"
+                          "VUTBR Grafové algoritmy\n\n"
+                          "Petr Svoboda\n"
+                          "Martin Matoušek"));
 }
 
 void MainWindow::on_actionStart_triggered()
@@ -151,10 +154,12 @@ void MainWindow::on_actionSaveFile_triggered()
 {
     QFileDialog saceFile;
 
-    QString file = saceFile.getSaveFileName(this, tr("Uložít soubor"), "", tr("*.gml"));
+    QString file = saceFile.getSaveFileName(this, tr("Uložit soubor"), "", tr("*.gml"));
 
     if(file != "")
     {
+        if(file.right(4) != ".gml")
+            file.append(".gml");
         scene->saveGraph(file);
     }
 }
